@@ -40,7 +40,7 @@ bool checkBatteryFactorStatus(const float minThreshold,const float maxThreshold,
     case 1 : cout << factorname <<" : value : " << valueOfFactor << " is greater than the Maximum threshhold value " << maxThreshold <<endl;
              result = false;
              break;
-    case 1 : cout << factorname <<" : value : " << valueOfFactor << " is less than the Manimum threshhold value " << minThreshold <<endl;
+    case -1 : cout << factorname <<" : value : " << valueOfFactor << " is less than the Manimum threshhold value " << minThreshold <<endl;
              result = false;
              break;
   }
@@ -57,7 +57,20 @@ bool batteryIsOk(float temperature, float soc, float chargeRate) {
   return result;
 }
 
+void testBatteryStatus(float temperature, float soc, float chargeRate ,bool expectedResult)
+{
+  assert(batteryIsOk(temperature,soc,chargeRate) == expectedResult);
+}
+
 int main() {
-  assert(batteryIsOk(25, 70, 0.7) == true);
-  assert(batteryIsOk(50, 85, 0) == false);
+  testBatteryStatus(25, 70, 0.7, true);
+  testBatteryStatus(50, 85, 0, false);
+  testBatteryStatus(46, 40, 0.6, false);
+  testBatteryStatus(-1, 30, 0.5, false);
+  testBatteryStatus(40, 19, 0.6, false);
+  testBatteryStatus(39, 81, 0.5, false);
+  testBatteryStatus(40, 50, -0.1, false);
+  testBatteryStatus(40, 50, 0.9, false);
+  testBatteryStatus(0, 20, 0, true);
+  testBatteryStatus(45, 80, 0.8, true);
 }
