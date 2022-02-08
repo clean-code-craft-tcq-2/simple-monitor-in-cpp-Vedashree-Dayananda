@@ -30,11 +30,9 @@ int checkValueInRange(const float minThreshold,const float maxThreshold,const fl
 bool checkBatteryFactorStatus(const float minThreshold,const float maxThreshold,const float valueOfFactor,const char* factorname)
 {
   int factorIndicator = checkValueInRange(minThreshold,maxThreshold,valueOfFactor);
-  bool result = false ;
+  bool result = true ;
   switch(factorIndicator)
   {
-    case 0 : result = true;
-             break;
     case 1 : cout << factorname <<" : value : " << valueOfFactor << " is greater than the Maximum threshhold value " << maxThreshold <<endl;
              result = false;
              break;
