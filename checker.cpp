@@ -9,7 +9,7 @@ const float SOC_MIN_THRESHOLD = 20.0F;
 const float SOC_MAX_THRESHOLD = 80.0F;
 
 const float CHARGERATE_MIN_THRESHOLD = 0.0F;
-const float CHARGERATE_MIN_THRESHOLD = 0.8F;
+const float CHARGERATE_MAX_THRESHOLD = 0.8F;
 
 bool valueInRange(const float minThreshold,const float maxThreshold,const float valueToCheck)
 {
