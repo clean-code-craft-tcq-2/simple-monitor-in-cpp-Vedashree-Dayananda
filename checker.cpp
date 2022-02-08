@@ -18,12 +18,10 @@ int checkValueInRange(const float minThreshold,const float maxThreshold,const fl
 {
   if (valueToCheck < minThreshold)
   {
-    cout << valueToCheck << "is less than Minimum Threshold value" << minThreshold <<endl;
     return -1;
   }
   else if ( valueToCheck > maxThreshold)
   {
-    cout << valueToCheck << "is greater than Maximum Threshold value" << maxThreshold <<endl;
     return 1;
   }
   return 0;
