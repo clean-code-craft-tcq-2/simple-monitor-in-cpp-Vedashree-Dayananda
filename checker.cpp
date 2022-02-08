@@ -18,7 +18,7 @@ bool valueInRange(const float minThreshold,const float maxThreshold,const float 
     cout << valueToCheck << "is less than Minimum Threshold value" << minThreshold <<endl;
     return false;
   }
-  else if ( valueToCheck > minThreshold)
+  else if ( valueToCheck > maxThreshold)
   {
     cout << valueToCheck << "is greater than Maximum Threshold value" << maxThreshold <<endl;
     return false;
