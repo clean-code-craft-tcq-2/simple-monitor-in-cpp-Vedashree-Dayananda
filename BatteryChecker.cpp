@@ -49,7 +49,6 @@ void testBatteryStatus(float temperature, float soc, float chargeRate ,bool expe
 }
 
 int main() {
-	cout << TEMPERATURE_LOWER_TOLERENCE_LIMIT << endl;
   testBatteryStatus(25, 70, 0.7, true);
   testBatteryStatus(50, 85, 0, false);
   testBatteryStatus(46, 40, 0.6, false);
