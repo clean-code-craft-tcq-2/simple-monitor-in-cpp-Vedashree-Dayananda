@@ -1,46 +1,37 @@
 #include <assert.h>
 #include <iostream>
 using namespace std;
+#include "BatteryThresholdDefines.h"
 
-const float TEMPERATURE_MIN_THRESHOLD = 0.0F;
-const float TEMPERATURE_MAX_THRESHOLD = 45.0F;
-
-const float SOC_MIN_THRESHOLD = 20.0F;
-const float SOC_MAX_THRESHOLD = 80.0F;
-
-const float CHARGERATE_MIN_THRESHOLD = 0.0F;
-const float CHARGERATE_MAX_THRESHOLD = 0.8F;
-
-//return value  0 - for value in range 
-//              1 - for value greater than threshold
-//             -1 - for value less than threshold
-int checkValueInRange(const float minThreshold,const float maxThreshold,const float valueToCheck)
+bool checkValueInRange(const float minThreshold, const float maxThreshold, const float valueToCheck, char** out_of_range_factor)
 {
-  if (valueToCheck < minThreshold)
-  {
-    return -1;
-  }
-  else if ( valueToCheck > maxThreshold)
-  {
-    return 1;
-  }
-  return 0;
+	if (valueToCheck < minThreshold)
+	{
+		*out_of_range_factor = "low"; 
+		return false;
+	}
+	else if (valueToCheck > maxThreshold)
+	{
+		*out_of_range_factor = "high";
+		return false;
+	}
+	return true;
 }
 
+void printOnConsole(const char* factorname, char* out_of_range_factor)
+{
+	cout << factorname << " value is " << out_of_range_factor << " than the threshhold value "<< endl;
+}
 bool checkBatteryFactorStatus(const float minThreshold,const float maxThreshold,const float valueOfFactor,const char* factorname)
 {
-  int factorIndicator = checkValueInRange(minThreshold,maxThreshold,valueOfFactor);
-  bool result = true ;
-  switch(factorIndicator)
-  {
-    case 1 : cout << factorname <<" : value : " << valueOfFactor << " is greater than the Maximum threshhold value " << maxThreshold <<endl;
-             result = false;
-             break;
-    case -1 : cout << factorname <<" : value : " << valueOfFactor << " is less than the Manimum threshhold value " << minThreshold <<endl;
-             result = false;
-             break;
-  }
-  return result;
+	char* out_of_range_factor = "";
+	bool factorIndicator = checkValueInRange(minThreshold, maxThreshold, valueOfFactor, &out_of_range_factor);
+	if (!factorIndicator)
+	{
+		printOnConsole(factorname, out_of_range_factor);
+	}
+	checkforLowerToleranceBreach(const float minThreshold, const float valueOfFactor);
+	return factorIndicator;
 }
 
 bool batteryIsOk(float temperature, float soc, float chargeRate) {
@@ -59,6 +50,7 @@ void testBatteryStatus(float temperature, float soc, float chargeRate ,bool expe
 }
 
 int main() {
+	cout << TEMPERATURE_LOWER_TOLERENCE_LIMIT << endl;
   testBatteryStatus(25, 70, 0.7, true);
   testBatteryStatus(50, 85, 0, false);
   testBatteryStatus(46, 40, 0.6, false);
