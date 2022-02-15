@@ -30,7 +30,6 @@ bool checkBatteryFactorStatus(const float minThreshold,const float maxThreshold,
 	{
 		printOnConsole(factorname, out_of_range_factor);
 	}
-	checkforLowerToleranceBreach(const float minThreshold, const float valueOfFactor);
 	return factorIndicator;
 }
 
