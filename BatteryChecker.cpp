@@ -28,16 +28,9 @@ void printOnConsole(string message)
 {
 	cout << message << endl;
 }
-bool checkBatteryFactorStatus(const float minThreshold, const float maxThreshold, const float minWarningThreshold, const float maxWarningThreshold, const float valueOfFactor, string factorname)
+void checkForEarlyWarnings(const float minThreshold, const float maxThreshold, const float minWarningThreshold, const float maxWarningThreshold, const float valueOfFactor, string factorname)
 {
-	string out_of_range_factor = "";
 	string message = "";
-	bool factorIndicator = checkValueInRange(minThreshold, maxThreshold, valueOfFactor, &out_of_range_factor);
-	if (!factorIndicator)
-	{
-		message = factorname + " value is " + out_of_range_factor + " than the threshhold value ";
-		printOnConsole(message);
-	}
 	if (checkValueInEarlyWarningRange(minThreshold, minWarningThreshold ,valueOfFactor))
 	{
 		message = "Warning : " + factorname + " Approaching lower threshold";
@@ -49,6 +42,19 @@ bool checkBatteryFactorStatus(const float minThreshold, const float maxThreshold
 		printOnConsole(message);
 	}
 
+}
+				   
+bool checkBatteryFactorStatus(const float minThreshold, const float maxThreshold, const float minWarningThreshold, const float maxWarningThreshold, const float valueOfFactor, string factorname)
+{
+	string out_of_range_factor = "";
+	string message = "";
+	bool factorIndicator = checkValueInRange(minThreshold, maxThreshold, valueOfFactor, &out_of_range_factor);
+	if (!factorIndicator)
+	{
+		message = factorname + " value is " + out_of_range_factor + " than the threshhold value ";
+		printOnConsole(message);
+	}
+	checkForEarlyWarnings(minThreshold,maxThreshold,minWarningThreshold, maxWarningThreshold,valueOfFactor,factorname);
 	return factorIndicator;
 }
 
