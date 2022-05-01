@@ -1,0 +1,12 @@
+bool checkValueInRange(const float minThreshold, const float maxThreshold, const float valueToCheck, string* out_of_range_factor);
+bool checkValueInEarlyWarningRange(const float lowerLimit, const float upperLimit, const float value);
+void printOnConsole(string message);
+string format_message(string messageType, string out_of_range_factor, string factor_name);
+void format_and_print_message(string messageType, string out_of_range_factor, string factor_name);
+void checkForEarlyWarnings(const float minThreshold, const float maxThreshold, const float minWarningThreshold, const float maxWarningThreshold, const float valueOfFactor, string factorname);
+bool checkBatteryFactorStatus(const float minThreshold, const float maxThreshold, const float minWarningThreshold, const float maxWarningThreshold, const float valueOfFactor, string factorname);
+float convertFarenhietToCelcius(float temperature);
+float convertKelvinToCelcius(float temperature);
+float convertTemperatureToCelcius(string temperature);
+bool batteryIsOk(string temperature, float soc, float chargeRate);
+void testBatteryStatus(string temperature, float soc, float chargeRate, bool expectedResult);
