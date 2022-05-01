@@ -1,9 +1,19 @@
 #include <assert.h>
 #include <sstream>
 #include <iostream>
+#include <map>
 using namespace std;
 #include "BatteryThresholdDefines.h"
+#include "BatteryChecker.h"
 
+using funcptr = float(*)(float);
+
+std::map < char, funcptr > TemperatureConverterFunctionMap = {
+	{ 'F', convertFarenhietToCelcius },
+	{ 'K', convertKelvinToCelcius }
+};
+
+//Checks if the value passed has breached any limit and sets the factor of breach low or high
 bool checkValueInRange(const float minThreshold, const float maxThreshold, const float valueToCheck, string* out_of_range_factor)
 {
 	if (valueToCheck < minThreshold)
@@ -24,22 +34,37 @@ bool checkValueInEarlyWarningRange(const float lowerLimit, const float upperLimi
 		return true;
 	return false;
 }
+
 void printOnConsole(string message)
 {
 	cout << message << endl;
+}
+
+string format_message(string messageType, string out_of_range_factor, string factor_name)
+{
+	string message = "";
+	if (messageType == "Warning")
+		message = messageType + " : " + factor_name + " Approaching " + out_of_range_factor + " Threshold\n";
+	else
+		message = factor_name + " value is " + out_of_range_factor + " than the threshhold value\n ";
+	return message;
+}
+
+void format_and_print_message(string messageType,string out_of_range_factor, string factor_name)
+{
+	string message = format_message(messageType, out_of_range_factor, factor_name);
+	printOnConsole(message);
 }
 void checkForEarlyWarnings(const float minThreshold, const float maxThreshold, const float minWarningThreshold, const float maxWarningThreshold, const float valueOfFactor, string factorname)
 {
 	string message = "";
 	if (checkValueInEarlyWarningRange(minThreshold, minWarningThreshold ,valueOfFactor))
 	{
-		message = "Warning : " + factorname + " Approaching lower threshold";
-		printOnConsole(message);
+		format_and_print_message("Warning","low", factorname);
 	}
 	else if (checkValueInEarlyWarningRange(maxWarningThreshold, maxThreshold, valueOfFactor))
 	{
-		message = "Warning : " + factorname + " Approaching Peak";
-		printOnConsole(message);
+		format_and_print_message("Warning", "high", factorname);
 	}
 
 }
@@ -51,11 +76,20 @@ bool checkBatteryFactorStatus(const float minThreshold, const float maxThreshold
 	bool factorIndicator = checkValueInRange(minThreshold, maxThreshold, valueOfFactor, &out_of_range_factor);
 	if (!factorIndicator)
 	{
-		message = factorname + " value is " + out_of_range_factor + " than the threshhold value ";
-		printOnConsole(message);
+		format_and_print_message("Breach",out_of_range_factor, factorname);
 	}
 	checkForEarlyWarnings(minThreshold,maxThreshold,minWarningThreshold, maxWarningThreshold,valueOfFactor,factorname);
 	return factorIndicator;
+}
+
+float convertFarenhietToCelcius(float temperature)
+{
+	return ((temperature - 32) * 5 / 9);
+}
+
+float convertKelvinToCelcius(float temperature)
+{
+	return (temperature - 273.15);
 }
 
 float convertTemperatureToCelcius(string temperature)
@@ -66,10 +100,10 @@ float convertTemperatureToCelcius(string temperature)
 	ss << temperatureValueInString;
 	ss >> temperatureValue;
 	temperatureInCelcius = temperatureValue;
-	if (temperature.back() == 'F')
+	if (temperature.back() != 'C')
 	{
-		temperatureInCelcius = (temperatureValue - 32) * 5 / 9;
-		
+		funcptr coverterFunction = TemperatureConverterFunctionMap[temperature.back()];
+		temperatureInCelcius = (*coverterFunction)(temperatureValue);
 	}
 	return temperatureInCelcius;
 }
